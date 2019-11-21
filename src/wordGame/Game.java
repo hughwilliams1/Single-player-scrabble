@@ -2,10 +2,18 @@ package wordGame;
 
 public class Game implements Controller {
 
+	private Rack rack;
+	
+	public Game() {
+		
+		rack = new Rack();
+	
+	}
+	
+
 	@Override
 	public String refillRack() {
-		// TODO Auto-generated method stub
-		return null;
+		return rack.refillRack();
 	}
 
 	@Override
@@ -31,5 +39,5 @@ public class Game implements Controller {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 }
