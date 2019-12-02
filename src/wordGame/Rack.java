@@ -34,7 +34,19 @@ public class Rack {
 	}
 	
 	public String toString() {
-		return rack.toString();
+		
+		StringBuilder rackString = new StringBuilder();
+		
+		rackString.append("[ ");
+		
+		for (String s : rack) {
+			rackString.append(s);
+			rackString.append(" ");
+		}
+		
+		rackString.append("]");
+		
+		return rackString.toString();
 	}
 	
 }
