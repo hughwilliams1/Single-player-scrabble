@@ -42,11 +42,17 @@ public class Game implements Controller {
 				
 				stateString.append("|");
 				
-				Character cell = board.getCell(r, c).getValue();
+				Cell cell = board.getCell(c,r);
 				
-				if (cell != null) {
-					stateString.append(cell);
-				} else {
+				if (cell.getValue() != null) {
+					stateString.append(cell.getValue());
+				}
+				
+				if(cell.getSpecial() && cell.getValue()==null)
+				{
+					stateString.append("+");
+				}
+				else{
 					stateString.append(" ");
 				}
 			}
@@ -66,8 +72,9 @@ public class Game implements Controller {
 	}
 
 	@Override
-	public String play(Play play) {
-		// TODO Auto-generated method stub
+	public String play(Play play)
+	{
+		Cell startCell = board.getCell(play.cell());
 		return null;
 	}
 

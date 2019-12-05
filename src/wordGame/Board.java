@@ -5,6 +5,7 @@ public class Board {
 	private int width = 10, height = 10;
 	private Cell[][] board = new Cell [width][height];
 	
+	private String[] letters = {"A","B","C","D","E","F","G","H","I","J"};
 	
 	public Board()
 	{
@@ -12,7 +13,11 @@ public class Board {
 		for (int x = 0; x<board.length;x++){
 		    for (int y = 0;y <board.length;y++)
 		    {
-		        board[x][y] = new Cell(x,y,false);
+		    	StringBuilder position = new StringBuilder();
+				position.append(letters[x]);
+				position.append(y);
+				
+		        board[x][y] = new Cell(position.toString(),false);
 		    }
 		}
 		
@@ -30,11 +35,23 @@ public class Board {
 		board[5][8].setSpecial(true); //F2
 	}
 
-	public Cell getCell(int x, int y) {
+	public Cell getCell(int x,int y) {
 		return board[x][y];
 	}
+	
+	
 	
 	public Cell[][] getBoard() {
 		return board;
 	}
+
+	public Cell getCell(String position)//b4
+	{
+		int x = letters.includes(position.charAt(0));
+		int y = position.indexOf(1);
+		return board[x][y];
+	}
+	
+	
+	
 }

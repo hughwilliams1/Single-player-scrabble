@@ -5,12 +5,12 @@ public class Cell {
 	boolean isSpecial = false;
 	//Since the grid uses letters for the x this may need to change from an int.
 	//A = 0, B = 1 etc.
-	private int x,y;
+	private String position;
 	private Character value;
+	private String[] letters = {"A","B","C","D","E","F","G","H","I","J"};
 	
-	public Cell (int x_,int y_,boolean isSpecial_) {
-		x = x_;
-		y = y_;
+	public Cell (String position_,boolean isSpecial_) {
+		position = position_;
 		isSpecial = isSpecial_;
 		value = null;
 	}
@@ -27,4 +27,17 @@ public class Cell {
 		isSpecial = b;
 		
 	}
+	
+	public boolean getSpecial() {
+		return isSpecial;
+	}
+	
+	/*public String getCellAsString() 
+	{
+		StringBuilder position = new StringBuilder();
+		position.append(letters[x]);
+		position.append(y);
+		return position.toString();
+	}*/
+	
 }
