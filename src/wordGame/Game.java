@@ -1,7 +1,5 @@
 package wordGame;
 
-import java.util.Arrays;
-
 public class Game implements Controller {
 
 	private Rack rack;
@@ -74,7 +72,11 @@ public class Game implements Controller {
 	@Override
 	public String play(Play play)
 	{
-		Cell startCell = board.getCell(play.cell());
+		
+		for(int i = 0; i < play.letterPositionsInRack().length(); i++) {
+			Cell currentCell = board.getCell(play.cell());
+		}
+		
 		return null;
 	}
 

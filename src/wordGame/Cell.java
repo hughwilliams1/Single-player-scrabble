@@ -7,7 +7,6 @@ public class Cell {
 	//A = 0, B = 1 etc.
 	private String position;
 	private Character value;
-	private String[] letters = {"A","B","C","D","E","F","G","H","I","J"};
 	
 	public Cell (String position_,boolean isSpecial_) {
 		position = position_;
@@ -32,12 +31,8 @@ public class Cell {
 		return isSpecial;
 	}
 	
-	/*public String getCellAsString() 
-	{
-		StringBuilder position = new StringBuilder();
-		position.append(letters[x]);
-		position.append(y);
-		return position.toString();
-	}*/
+	public String getPosition() {
+		return position;
+	}
 	
 }

@@ -38,20 +38,16 @@ public class Board {
 	public Cell getCell(int x,int y) {
 		return board[x][y];
 	}
-	
-	
+
+	public Cell getCell(String position)
+	{
+		int x = position.charAt(0) - 65;
+		int y = position.charAt(1) - 48;
+		return board[x][y];
+	}
 	
 	public Cell[][] getBoard() {
 		return board;
 	}
-
-	public Cell getCell(String position)//b4
-	{
-		int x = letters.includes(position.charAt(0));
-		int y = position.indexOf(1);
-		return board[x][y];
-	}
-	
-	
 	
 }
