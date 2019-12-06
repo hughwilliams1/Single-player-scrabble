@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Iterator;
 
 public class Game implements Controller {
 
@@ -23,19 +24,14 @@ public class Game implements Controller {
 		rack = new Rack();
 		board = new Board();
 		
-		
-		loadDictionary("/assets/dictionary.txt");
+		loadDictionary("dictionary.txt");
 	}
 	
 	public void loadDictionary(String path) {
 		//Load dictionary text file into hash set
 		try {
 		File file = new File(path);
-		
-		FileReader fr;
-		
-			fr = new FileReader(file);
-		
+		FileReader fr = new FileReader(file);
 		BufferedReader br = new BufferedReader(fr);
 		String line;
 		while((line = br.readLine()) != null)
@@ -45,6 +41,7 @@ public class Game implements Controller {
 		}  catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	@Override
 	public String refillRack() {
