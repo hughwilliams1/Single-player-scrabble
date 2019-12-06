@@ -1,21 +1,51 @@
 package wordGame;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashSet;
+
 public class Game implements Controller {
 
 	private Rack rack;
 	private Board board;
-	
-	public Game() {
-		rack = new Rack();
-		board = new Board();
-	}
+	private HashSet<String> validWords = new HashSet<String>(); 
 	
 	public static void main(String[] args) {
 		Game game = new Game();
 		TUI tui = new TUI(game);
+		
 	}
 	
-
+	public Game() {
+		rack = new Rack();
+		board = new Board();
+		
+		
+		loadDictionary("/assets/dictionary.txt");
+	}
+	
+	public void loadDictionary(String path) {
+		//Load dictionary text file into hash set
+		try {
+		File file = new File(path);
+		
+		FileReader fr;
+		
+			fr = new FileReader(file);
+		
+		BufferedReader br = new BufferedReader(fr);
+		String line;
+		while((line = br.readLine()) != null)
+		{
+		    validWords.add(line);
+		}
+		}  catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	@Override
 	public String refillRack() {
 		return rack.refillRack();
@@ -106,7 +136,17 @@ public class Game implements Controller {
 
 	@Override
 	public String checkValidity(Play play) {
-		// TODO Auto-generated method stub
+		StringBuilder word = new StringBuilder();
+		
+		String letterPos = play.letterPositionsInRack();
+		for (int i = 0; i < letterPos.length(); i++)
+		{
+		    char c = letterPos.charAt(i);
+		    int d = Character.getNumericValue(c);
+		    word.append(rack.getLetterFromRack(d));
+		}
+		
+		//if word in dictionary
 		return null;
 	}
 	

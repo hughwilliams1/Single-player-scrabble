@@ -28,7 +28,9 @@ public class Rack {
 	public void removeFromRack(int index) {
 		rack.remove(index);
 	}
-	
+	public String getLetterFromRack(int pos) {
+		return rack.get(pos);
+	}
 	public ArrayList<String> getRack() {
 		return rack;
 	}
