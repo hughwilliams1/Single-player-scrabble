@@ -72,12 +72,30 @@ public class Game implements Controller {
 	@Override
 	public String play(Play play)
 	{
+		Cell currentCell = board.getCell(play.cell());
+		
+		StringBuilder returnString = new StringBuilder();
 		
 		for(int i = 0; i < play.letterPositionsInRack().length(); i++) {
-			Cell currentCell = board.getCell(play.cell());
+			if(!currentCell.isEmpty()) {
+				returnString.append("Cell ");
+				returnString.append(currentCell.getPosition());
+				returnString.append(" is full.");
+				return returnString.toString();
+			} 
+			
+			if(play.dir().toString().equals("ACROSS")) {
+				currentCell = board.getCellAcross(currentCell.getPosition());
+			} else {
+				currentCell = board.getCellDown(currentCell.getPosition());
+		}
+			
+			
+			
+			currentCell = board.getCell(play.cell());
 		}
 		
-		return null;
+		return "VALID";
 	}
 
 	@Override

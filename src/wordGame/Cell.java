@@ -35,4 +35,13 @@ public class Cell {
 		return position;
 	}
 	
+	public boolean isEmpty() {
+		if(value == null) {
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
 }

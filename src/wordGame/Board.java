@@ -34,20 +34,48 @@ public class Board {
 		board[4][8].setSpecial(true); //E2
 		board[5][8].setSpecial(true); //F2
 	}
+	
+	public void setCell(Cell cell) {
+		int[] pos = getPosXY(cell.getPosition());
+		
+		board[pos[0]][pos[1]] = cell;
+	}
 
 	public Cell getCell(int x,int y) {
 		return board[x][y];
 	}
-
+	
 	public Cell getCell(String position)
-	{
-		int x = position.charAt(0) - 65;
-		int y = position.charAt(1) - 48;
-		return board[x][y];
+	{		
+		int[] pos = getPosXY(position);
+		
+		return board[pos[0]][pos[1]];
+	}
+	
+	public Cell getCellAcross(String position) {
+		
+		int[] pos = getPosXY(position);
+		
+		return board[pos[0]+1][pos[1]];
+	}
+	
+	public Cell getCellDown(String position) {
+		int[] pos = getPosXY(position);
+		
+		return board[pos[0]][pos[1]+1];
 	}
 	
 	public Cell[][] getBoard() {
 		return board;
+	}
+	
+	private int[] getPosXY(String position) {
+		int x = position.charAt(0) - 65;
+		int y = position.charAt(1) - 48;
+		
+		int[] arr = {x,y};
+		
+		return arr;
 	}
 	
 }
