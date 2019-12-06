@@ -99,30 +99,8 @@ public class Game implements Controller {
 	@Override
 	public String play(Play play)
 	{
-		Cell currentCell = board.getCell(play.cell());
-		
-		StringBuilder returnString = new StringBuilder();
-		
-		for(int i = 0; i < play.letterPositionsInRack().length(); i++) {
-			if(!currentCell.isEmpty()) {
-				returnString.append("Cell ");
-				returnString.append(currentCell.getPosition());
-				returnString.append(" is full.");
-				return returnString.toString();
-			} 
-			
-			if(play.dir().toString().equals("ACROSS")) {
-				currentCell = board.getCellAcross(currentCell.getPosition());
-			} else {
-				currentCell = board.getCellDown(currentCell.getPosition());
-		}
-			
-			
-			
-			currentCell = board.getCell(play.cell());
-		}
-		
-		return "VALID";
+		checkValidity(play);
+		return gameState();
 	}
 
 	@Override
@@ -132,18 +110,124 @@ public class Game implements Controller {
 	}
 
 	@Override
-	public String checkValidity(Play play) {
-		StringBuilder word = new StringBuilder();
+	public String checkValidity(Play play) 
+	{
 		
-		String letterPos = play.letterPositionsInRack();
-		for (int i = 0; i < letterPos.length(); i++)
+		StringBuilder returnString = new StringBuilder();
+		StringBuilder fullWord = new StringBuilder();
+		
+		//Set current cell to start cell of new word
+		Cell currentCell = board.getCell(play.cell());
+		
+		//Check word collisions with starting cell.
+		if(play.dir()==Direction.ACROSS)
 		{
-		    char c = letterPos.charAt(i);
-		    int d = Character.getNumericValue(c);
-		    word.append(rack.getLetterFromRack(d));
+			Cell leftCell = board.getCellLeft(currentCell.getPosition());
+			while(leftCell.isEmpty() == false) 
+			{				
+				fullWord.insert(0, leftCell.getValue());
+				leftCell = board.getCellLeft(currentCell.getPosition());
+			}
 		}
 		
-		//if word in dictionary
+		else {
+			Cell upCell = board.getCellUp(currentCell.getPosition());
+			while(upCell.isEmpty() == false)
+			{
+				fullWord.insert(0, upCell.getValue());
+				upCell = board.getCellUp(currentCell.getPosition());
+			}
+		}
+		
+		//Check if selected cells are all empty
+		for(int i = 0; i < play.letterPositionsInRack().length(); i++) 
+		{
+			if(currentCell == null) {
+				return "Cell is out of board range.";
+			}
+			//If cell isnt empty then this play isnt valid.
+			if(!currentCell.isEmpty()) {
+				returnString.append("Cell ");
+				returnString.append(currentCell.getPosition());
+				returnString.append(" is full.");
+				return returnString.toString();
+			}
+			
+			if(play.dir() == Direction.ACROSS) 
+			{
+				currentCell = board.getCellRight(currentCell.getPosition());
+			} else {
+				currentCell = board.getCellDown(currentCell.getPosition());
+		}
+			
+			//Check word collisions with end cell.
+			if(play.dir()==Direction.ACROSS)
+			{
+				Cell rightCell = board.getCellRight(currentCell.getPosition());
+				while(rightCell.isEmpty() == false) 
+				{				
+					fullWord.insert(0, rightCell.getValue());
+					rightCell = board.getCellRight(currentCell.getPosition());
+				}
+			}
+			
+			else {
+				Cell downCell = board.getCellDown(currentCell.getPosition());
+				while(downCell.isEmpty() == false)
+				{
+					fullWord.insert(0, downCell.getValue());
+					downCell = board.getCellDown(currentCell.getPosition());
+				}
+			}	
+			//Check if selected cells are all empty
+			
+			currentCell = board.getCell(play.cell());
+			
+			for(int j = 0; j < play.letterPositionsInRack().length(); j++) 
+			{
+				StringBuilder tempWord = new StringBuilder();
+				currentCell = board.getCell(play.cell());
+				if(play.dir() == Direction.ACROSS) 
+				{
+					Cell upCell = board.getCellUp(currentCell.getPosition());
+					Cell downCell = board.getCellDown(currentCell.getPosition());
+					while(upCell.isEmpty() == false)
+					{
+						tempWord.insert(0, downCell.getValue());
+						downCell = board.getCellDown(currentCell.getPosition());
+					}
+					while(downCell.isEmpty() == false)
+					{
+						tempWord.append(downCell.getValue());
+						downCell = board.getCellDown(currentCell.getPosition());
+					}
+					currentCell = board.getCellRight(currentCell.getPosition());
+					//CHECK IF TEMPWORD IS IN DICTIONARY!!!
+				} else 
+				{
+					Cell rightCell = board.getCellRight(currentCell.getPosition());
+					Cell leftCell = board.getCellLeft(currentCell.getPosition());
+					while(rightCell.isEmpty() == false)
+					{
+						tempWord.insert(0, rightCell.getValue());
+						rightCell = board.getCellRight(currentCell.getPosition());
+					}
+					while(leftCell.isEmpty() == false)
+					{
+						tempWord.append(leftCell.getValue());
+						leftCell = board.getCellLeft(currentCell.getPosition());
+					}
+					currentCell = board.getCellRight(currentCell.getPosition());
+			}	
+			}
+			
+		} 
+		//Check left or up of start cell !
+		//Check cells are empty !
+		//Check right of end or down
+		
+		//If cell isnt empty add to board
+		
 		return null;
 	}
 	

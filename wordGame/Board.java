@@ -52,11 +52,24 @@ public class Board {
 		return board[pos[0]][pos[1]];
 	}
 	
-	public Cell getCellAcross(String position) {
+	public Cell getCellRight(String position) {
 		
 		int[] pos = getPosXY(position);
 		
-		return board[pos[0]+1][pos[1]];
+		Cell newCell = board[pos[0]+1][pos[1]];
+		if(newCell!=null) {
+			return newCell;
+		}else {
+			return null;
+		}
+		
+	}
+	
+	public Cell getCellLeft(String position) {
+		
+		int[] pos = getPosXY(position);
+		
+		return board[pos[0]-1][pos[1]];
 	}
 	
 	public Cell getCellDown(String position) {
@@ -64,7 +77,11 @@ public class Board {
 		
 		return board[pos[0]][pos[1]+1];
 	}
-	
+	public Cell getCellUp(String position)
+	{
+		int[] pos = getPosXY(position);
+		return board[pos[0]][pos[1]-1];
+	}
 	public Cell[][] getBoard() {
 		return board;
 	}
@@ -77,5 +94,7 @@ public class Board {
 		
 		return arr;
 	}
+
+	
 	
 }
