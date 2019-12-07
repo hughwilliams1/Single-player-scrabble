@@ -77,11 +77,24 @@ public class Board {
 		
 		return board[pos[0]][pos[1]+1];
 	}
+	
 	public Cell getCellUp(String position)
 	{
 		int[] pos = getPosXY(position);
 		return board[pos[0]][pos[1]-1];
 	}
+	
+	public Cell getEndCell(String startCell, int playLength, Direction dir) {
+		
+		int[] pos = getPosXY(startCell);
+		
+		if (dir == Direction.ACROSS) {
+			return board[pos[0] + (playLength - 1)][pos[1]];
+		} else {
+			return board[pos[0]][pos[1] + (playLength - 1)];
+		}
+	}
+	
 	public Cell[][] getBoard() {
 		return board;
 	}

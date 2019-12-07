@@ -1,8 +1,2 @@
-/.classpath
-/.project
-/README.md
-/src/
-/wordGame/
-/assets/
-/test
 /dictionary.txt
+/wordGame/
