@@ -163,35 +163,50 @@ public class Game implements Controller {
 		for(int i = 0; i < play.letterPositionsInRack().length(); i++) 
 		{
 			if (currentCell == startCell) {
+				// sets up local variables for check
 				
-				//up
-				//left
+				//gets cell up from start
+				board.getCellUp(startCell);
+				//gets cell left from start
+				board.getCellLeft(startCell);
 				
 				if (dir == Direction.ACROSS) {
-					//down
+					//gets cell down from start
+					board.getCellDown(startCell);
 				} else {
-					//right
+					//gets cell right from start
+					board.getCellRight(startCell);
 				}
+				
 			} 
 			else if (currentCell == endCell) {
 				
-				//right
-				//down
+				//gets cell right from current
+				board.getCellRight(currentCell);
+				//gets cell down from current
+				board.getCellDown(currentCell);
 				
 				if (dir == Direction.ACROSS) {
-					//up
+					//gets cell up from current
+					board.getCellUp(currentCell);
 				} else {
-					//left
+					//gets cell left from current
+					board.getCellLeft(currentCell);
 				}
 			} 
 			else {
 				
 				if (dir == Direction.ACROSS) {
-					//up
-					//down
+					//gets cell up from end
+					board.getCellUp(endCell);
+					//gets cell down from end
+					board.getCellDown(endCell);
+					
 				} else {
-					//left
-					//right
+					//gets cell left from end
+					board.getCellLeft(endCell);
+					//gets cell right from end
+					board.getCellRight(endCell);
 				}
 				
 			}
