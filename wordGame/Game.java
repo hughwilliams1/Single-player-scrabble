@@ -129,7 +129,11 @@ public class Game implements Controller {
 			}
 		}
 		
-		checkValidity(play);
+		if(checkValidity(play)=="VALID") {
+			board=insertLetters(board,play);
+			
+			
+		}
 		return gameState();
 	}
 
@@ -139,11 +143,37 @@ public class Game implements Controller {
 		return null;
 	}
 
+	private Board insertLetters(Board b,Play p) {
+		Cell newCell = b.getCell(p.cell());
+		
+		System.out.println("array: "+p.letterPositionsInRack().toCharArray());
+		for (char letter: p.letterPositionsInRack().toCharArray()) {
+			
+			System.out.println("char"+letter);
+			System.out.println("value = "+rack.getLetterFromRackAsChar(Character.getNumericValue(letter)));
+			
+			newCell.setValue(rack.getLetterFromRackAsChar(Character.getNumericValue(letter)));
+			b.setCell(newCell);
+			
+			if(p.dir() == Direction.ACROSS)
+			{
+				newCell = b.getCellRight(newCell.getPosition());
+			} else
+			{
+				newCell = b.getCellDown(newCell.getPosition());
+			}	
+		}
+		return b;
+	}
 	@Override
 	public String checkValidity(Play play) 
 	{
+		Board backupBoard = board;
+		
+		board=insertLetters(board,play);
+		
 		//The start cell of the play
-		String startCell = play.cell();
+		String startCellPosition = play.cell();
 		
 		//The length of the play
 		int playLength = play.letterPositionsInRack().length();
@@ -152,20 +182,16 @@ public class Game implements Controller {
 		Direction dir = play.dir();
 		
 		//Find the end cell using starting cell, direction and the length of the play
-		String endCell = board.getEndCell(startCell, playLength, dir).getPosition();
+		String endCellPosition = board.getEndCell(startCellPosition, playLength, dir).getPosition();
 		
 		//The current cell being looped over
-		String currentCell = play.cell();
+		String currentCellPosition = play.cell();
 		
+		//An arraylist containing all of the words which need to be checked in order for this play to be valid. Ensures that placing a new letter doesnt break existing words.
+		ArrayList<String> wordsToCheck = new ArrayList<String>();
 		
-		//Board boardCopy = board;
-		//Character value = rack.getLetterFromRack((play.letterPositionsInRack().charAt(i))).charAt(0);
-		//boardCopy.getCell(currentCell).setValue(value);
-		
-		ArrayList<String> currentWords = new ArrayList<String>();
-		
-		
-		currentWords.add(getWordFromStart(startCell, endCell, dir));
+		//Builds the new word from letters in rack and letters on the board.
+		wordsToCheck.add(getWordFromStart(startCellPosition, endCellPosition, dir));
 		
 		/*
 		 * Loop over for the length of the play scanning different cells based on play direction
@@ -173,23 +199,26 @@ public class Game implements Controller {
 		 */
 		for(int i = 0; i < play.letterPositionsInRack().length(); i++) 
 		{	
-			
+			//For each new letter check cells above and below for any collisions.
 			if (dir == Direction.ACROSS) {
-				currentWords.add(getWordUpAndDown(currentCell));
-				currentCell = board.getCellRight(currentCell).getPosition();
-			} else {
-				currentWords.add(getWordLeftAndRight(currentCell));
-				currentCell = board.getCellDown(currentCell).getPosition();
+				wordsToCheck.add(getWordUpAndDown(currentCellPosition));
+				currentCellPosition = board.getCellRight(currentCellPosition).getPosition();
+			} 
+			//For each new letter check cells right and left for any collisions.
+			else {
+				wordsToCheck.add(getWordLeftAndRight(currentCellPosition));
+				currentCellPosition = board.getCellDown(currentCellPosition).getPosition();
 			}
 		}
 		
-		for (String word : currentWords) {
+		for (String word : wordsToCheck) {
+			System.out.println("word: "+word);
 			if (!validWords.contains(word)) {
-				return ("Invalid word / word cmobo");
+				System.out.println ("Invalid word / word cmobo");
 			}
 		}
-		
-		return "Valid Play";
+		board = backupBoard;
+		return "VALID";
 	}
 	
 	/*
@@ -201,6 +230,7 @@ public class Game implements Controller {
 		
 		StringBuilder fullWord = new StringBuilder(); 
 		
+		//Add starting letter
 		fullWord.append(board.getCell(position).getValue());
 		
 		Cell upCell = board.getCellUp(position);
@@ -250,56 +280,56 @@ public class Game implements Controller {
 	 * Scan Left / Up and add before
 	 * Scan Right / Down and append to word
 	 */
-	private String getWordFromStart(String position, String endCell, Direction dir) {
+	private String getWordFromStart(String startCellPos, String endCellPos, Direction dir) {
 		
 		StringBuilder fullWord = new StringBuilder(); 
+		String currentPos = startCellPos;
 		
 		if(dir == Direction.ACROSS) {
 			
-			String cellAfterEnd = board.getCellRight(endCell).getPosition();
-			
-			while (position != cellAfterEnd) {
-				fullWord.append(board.getCell(position).getValue());
-				position = board.getCellRight(position).getPosition();
+			//Add letters which arent on the board yet into the word.
+			String cellAfterEnd = board.getCellRight(endCellPos).getPosition();
+			while (currentPos != cellAfterEnd) {
+				fullWord.append(board.getCell(currentPos).getValue());
+				currentPos = board.getCellRight(currentPos).getPosition();
 			}
-			
-			Cell leftCell = board.getCellLeft(position);
+			//Add letters which are to the left of the new letters
+			Cell leftCell = board.getCellLeft(currentPos);
 			while(leftCell.isEmpty() == false) {
 				fullWord.insert(0, leftCell.getValue());
 				leftCell = board.getCellLeft(leftCell.getPosition());
 			}
-			
-			Cell rightCell = board.getCellRight(endCell);
+			//Add letters which are to the right of the new letters
+			Cell rightCell = board.getCellRight(endCellPos);
 			while(rightCell.isEmpty() == false) {
 				fullWord.append(rightCell.getValue());
 				rightCell = board.getCellRight(rightCell.getPosition());
 			}
 			
-			return fullWord.toString();
 			
 		} else {
 			
-			String cellAfterEnd = board.getCellDown(endCell).getPosition();
-			
-			while (position != cellAfterEnd) {
-				fullWord.append(board.getCell(position).getValue());
-				position = board.getCellDown(position).getPosition();
+			//Add letters which arent on the board yet into the word.
+			String cellAfterEnd = board.getCellDown(endCellPos).getPosition();	
+			while (currentPos != cellAfterEnd) {
+				fullWord.append(board.getCell(currentPos).getValue());
+				currentPos = board.getCellDown(currentPos).getPosition();
 			}
-			
-			Cell upCell = board.getCellUp(position);
+			//Add letters which are above the new letters
+			Cell upCell = board.getCellUp(currentPos);
 			while(upCell.isEmpty() == false) {
 				fullWord.insert(0, upCell.getValue());
 				upCell = board.getCellLeft(upCell.getPosition());
 			}
-			
-			Cell downCell = board.getCellDown(endCell);
+			//Add letters which are below the new letters
+			Cell downCell = board.getCellDown(endCellPos);
 			while(downCell.isEmpty() == false) {
 				fullWord.append(downCell.getValue());
 				downCell = board.getCellRight(downCell.getPosition());
 			}
 			
-			return fullWord.toString();
 		}
+		return fullWord.toString();
 	}
 
 }

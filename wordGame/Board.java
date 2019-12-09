@@ -1,7 +1,5 @@
 package wordGame;
 
-import org.graalvm.compiler.lir.alloc.OutOfRegistersException;
-
 public class Board {
 	
 	private int width = 10, height = 10;
@@ -19,7 +17,7 @@ public class Board {
 				position.append(letters[x]);
 				position.append(y);
 				
-		        board[x][y] = new Cell(position.toString(),false);
+		        board[x][y] = new Cell(position.toString(),false,null);
 		    }
 		}
 		
@@ -54,7 +52,7 @@ public class Board {
 		try {
 			return board[pos[0]][pos[1]];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			return new Cell("", false);
+			return new Cell("", false,null);
 		}
 	}
 	
@@ -65,7 +63,7 @@ public class Board {
 		try {
 			return board[pos[0]+1][pos[1]];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			return new Cell("", false);
+			return new Cell("", false,null);
 		}
 	}
 	
@@ -76,7 +74,7 @@ public class Board {
 		try {
 			return board[pos[0]-1][pos[1]];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			return new Cell("", false);
+			return new Cell("", false,null);
 		}
 		
 	}
@@ -87,7 +85,7 @@ public class Board {
 		try {
 			return board[pos[0]][pos[1]+1];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			return new Cell("", false);
+			return new Cell("", false,null);
 		}
 	}
 	
@@ -98,7 +96,7 @@ public class Board {
 		try {
 			return board[pos[0]][pos[1]-1];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			return new Cell("", false);
+			return new Cell("", false,null);
 		}
 	}
 	

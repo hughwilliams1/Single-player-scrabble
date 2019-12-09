@@ -11,14 +11,17 @@ public class Rack {
 	
 	public Rack() {
 		
-		rack = new ArrayList<String>(10);
+		rack = new ArrayList<String>(5);
 		
 		letters = new String[] {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+		rack.add("C");
+		rack.add("A");
+		rack.add("R");
 	}
 	
 	public String refillRack() {
 		Random rand = new Random();
-		while (rack.size() != 10) {
+		while (rack.size() != 5) {
 			rack.add(letters[rand.nextInt(26)]);
 		}
 		
@@ -30,6 +33,9 @@ public class Rack {
 	}
 	public String getLetterFromRack(int pos) {
 		return rack.get(pos);
+	}
+	public char getLetterFromRackAsChar(int pos) {
+		return rack.get(pos).charAt(0);
 	}
 	public ArrayList<String> getRack() {
 		return rack;

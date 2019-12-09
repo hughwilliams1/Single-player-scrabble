@@ -8,10 +8,16 @@ public class Cell {
 	private String position;
 	private Character value;
 	
-	public Cell (String position_,boolean isSpecial_) {
+	public Cell (String position_,Character value_) {
+		position = position_;
+		isSpecial = false;
+		value = value_;
+	}
+	
+	public Cell (String position_,boolean isSpecial_,Character value_) {
 		position = position_;
 		isSpecial = isSpecial_;
-		value = null;
+		value = value_;
 	}
 	
 	public void setValue(Character c) {
