@@ -15,7 +15,7 @@ public class Board {
 		    {
 		    	StringBuilder position = new StringBuilder();
 				position.append(letters[x]);
-				position.append(y);
+				position.append(y+1);
 				
 		        board[x][y] = new Cell(position.toString(),false,null);
 		    }
@@ -107,7 +107,7 @@ public class Board {
 		if (dir == Direction.ACROSS) {
 			return board[pos[0] + (playLength - 1)][pos[1]];
 		} else {
-			return board[pos[0]][pos[1] + (playLength - 1)];
+			return board[pos[0]][pos[1] + (playLength - 1)] ;
 		}
 	}
 	
