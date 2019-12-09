@@ -79,7 +79,7 @@ public class Game implements Controller {
 				{
 					stateString.append("+");
 				}
-				else{
+				else if(cell.getValue()==null){
 					stateString.append(" ");
 				}
 			}
@@ -146,15 +146,13 @@ public class Game implements Controller {
 	private Board insertLetters(Board b,Play p) {
 		Cell newCell = b.getCell(p.cell());
 		
-		System.out.println("array: "+p.letterPositionsInRack().toCharArray());
+		
 		for (char letter: p.letterPositionsInRack().toCharArray()) {
 			
-			System.out.println("char"+letter);
-			System.out.println("value = "+rack.getLetterFromRackAsChar(Character.getNumericValue(letter)));
 			
-			newCell.setValue(rack.getLetterFromRackAsChar(Character.getNumericValue(letter)-1));
+			newCell.setValue(rack.getLetterFromRackAsChar(Character.getNumericValue(letter-1)));
 			b.setCell(newCell);
-			
+			System.out.println(newCell.getValue());
 			if(p.dir() == Direction.ACROSS)
 			{
 				newCell = b.getCellRight(newCell.getPosition());
@@ -213,8 +211,11 @@ public class Game implements Controller {
 		}
 		
 		for (String word : wordsToCheck) {
+			System.out.println("word"+word);
 			if (!validWords.contains(word.toLowerCase())) {
+				board = backupBoard;
 				return "INVALID";
+				
 			}
 		}
 		board = backupBoard;
@@ -289,21 +290,25 @@ public class Game implements Controller {
 			
 			//Add letters which arent on the board yet into the word.
 			String cellAfterEnd = board.getCellRight(endCellPos).getPosition();
-			while (currentPos != cellAfterEnd) {
+			System.out.println("pos1: "+cellAfterEnd);
+			while (!currentPos.isEmpty()) {
 				fullWord.append(board.getCell(currentPos).getValue());
 				currentPos = board.getCellRight(currentPos).getPosition();
+				System.out.println("pos2: "+cellAfterEnd);
 			}
 			//Add letters which are to the left of the new letters
 			Cell leftCell = board.getCellLeft(currentPos);
 			while(leftCell.isEmpty() == false) {
 				fullWord.insert(0, leftCell.getValue());
 				leftCell = board.getCellLeft(leftCell.getPosition());
+				
 			}
 			//Add letters which are to the right of the new letters
 			Cell rightCell = board.getCellRight(endCellPos);
 			while(rightCell.isEmpty() == false) {
 				fullWord.append(rightCell.getValue());
 				rightCell = board.getCellRight(rightCell.getPosition());
+				
 			}
 			
 			
@@ -311,21 +316,25 @@ public class Game implements Controller {
 			
 			//Add letters which arent on the board yet into the word.
 			String cellAfterEnd = board.getCellDown(endCellPos).getPosition();	
-			while (currentPos != cellAfterEnd) {
+			while (!currentPos.isEmpty()) {
+				
 				fullWord.append(board.getCell(currentPos).getValue());
 				currentPos = board.getCellDown(currentPos).getPosition();
+				
 			}
 			//Add letters which are above the new letters
-			Cell upCell = board.getCellUp(currentPos);
+			Cell upCell = board.getCellUp(startCellPos);
 			while(upCell.isEmpty() == false) {
 				fullWord.insert(0, upCell.getValue());
 				upCell = board.getCellLeft(upCell.getPosition());
+				
 			}
 			//Add letters which are below the new letters
 			Cell downCell = board.getCellDown(endCellPos);
 			while(downCell.isEmpty() == false) {
 				fullWord.append(downCell.getValue());
 				downCell = board.getCellRight(downCell.getPosition());
+				
 			}
 			
 		}

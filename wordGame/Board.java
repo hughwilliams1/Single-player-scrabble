@@ -117,7 +117,7 @@ public class Board {
 	
 	private int[] getPosXY(String position) {
 		int x = position.charAt(0) - 65;
-		int y = position.charAt(1) - 48;
+		int y = position.charAt(1) - 49;
 		
 		int[] arr = {x,y};
 		
