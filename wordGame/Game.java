@@ -152,7 +152,7 @@ public class Game implements Controller {
 			System.out.println("char"+letter);
 			System.out.println("value = "+rack.getLetterFromRackAsChar(Character.getNumericValue(letter)));
 			
-			newCell.setValue(rack.getLetterFromRackAsChar(Character.getNumericValue(letter)));
+			newCell.setValue(rack.getLetterFromRackAsChar(Character.getNumericValue(letter)-1));
 			b.setCell(newCell);
 			
 			if(p.dir() == Direction.ACROSS)
@@ -189,10 +189,11 @@ public class Game implements Controller {
 		
 		//An arraylist containing all of the words which need to be checked in order for this play to be valid. Ensures that placing a new letter doesnt break existing words.
 		ArrayList<String> wordsToCheck = new ArrayList<String>();
-		
-		//Builds the new word from letters in rack and letters on the board.
-		wordsToCheck.add(getWordFromStart(startCellPosition, endCellPosition, dir));
-		
+		if(play.letterPositionsInRack().length() > 1) {
+			//Builds the new word from letters in rack and letters on the board.
+			wordsToCheck.add(getWordFromStart(startCellPosition, endCellPosition, dir));
+			
+		}
 		/*
 		 * Loop over for the length of the play scanning different cells based on play direction
 		 * and if end / start.
@@ -212,9 +213,8 @@ public class Game implements Controller {
 		}
 		
 		for (String word : wordsToCheck) {
-			System.out.println("word: "+word);
-			if (!validWords.contains(word)) {
-				System.out.println ("Invalid word / word cmobo");
+			if (!validWords.contains(word.toLowerCase())) {
+				return "INVALID";
 			}
 		}
 		board = backupBoard;
