@@ -1,5 +1,7 @@
 package wordGame;
 
+import org.graalvm.compiler.lir.alloc.OutOfRegistersException;
+
 public class Board {
 	
 	private int width = 10, height = 10;
@@ -48,40 +50,56 @@ public class Board {
 	public Cell getCell(String position)
 	{		
 		int[] pos = getPosXY(position);
-		
-		return board[pos[0]][pos[1]];
+	
+		try {
+			return board[pos[0]][pos[1]];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return new Cell("", false);
+		}
 	}
 	
 	public Cell getCellRight(String position) {
 		
 		int[] pos = getPosXY(position);
-		
-		Cell newCell = board[pos[0]+1][pos[1]];
-		if(newCell!=null) {
-			return newCell;
-		}else {
-			return null;
+
+		try {
+			return board[pos[0]+1][pos[1]];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return new Cell("", false);
 		}
-		
 	}
 	
 	public Cell getCellLeft(String position) {
 		
 		int[] pos = getPosXY(position);
 		
-		return board[pos[0]-1][pos[1]];
+		try {
+			return board[pos[0]-1][pos[1]];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return new Cell("", false);
+		}
+		
 	}
 	
 	public Cell getCellDown(String position) {
 		int[] pos = getPosXY(position);
 		
-		return board[pos[0]][pos[1]+1];
+		try {
+			return board[pos[0]][pos[1]+1];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return new Cell("", false);
+		}
 	}
 	
 	public Cell getCellUp(String position)
 	{
 		int[] pos = getPosXY(position);
-		return board[pos[0]][pos[1]-1];
+		
+		try {
+			return board[pos[0]][pos[1]-1];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return new Cell("", false);
+		}
 	}
 	
 	public Cell getEndCell(String startCell, int playLength, Direction dir) {
