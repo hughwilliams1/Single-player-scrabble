@@ -15,15 +15,18 @@ public class Game implements Controller {
 	private Board board;
 	private HashSet<String> validWords = new HashSet<String>(); 
 	private ArrayList<String> wordsInPlay;
+	private Cell[][] backupBoard;
 	
 	public static void main(String[] args) {
 		Game game = new Game();
 		TUI tui = new TUI(game);
 	}
 	
+	
 	public Game() {
 		rack = new Rack();
 		board = new Board();
+		backupBoard = board.getBoard();
 		wordsInPlay = new ArrayList<String>();
 		
 		loadDictionary("dictionary.txt");
@@ -141,8 +144,8 @@ public class Game implements Controller {
 	}
 
 	private Board insertLetters(Board b,Play p) {
+		backupBoard = b.getBoard();
 		Cell newCell = b.getCell(p.cell());
-		
 		
 		for (char letter: p.letterPositionsInRack().toCharArray()) {
 			
@@ -164,7 +167,6 @@ public class Game implements Controller {
 	public String checkValidity(Play play) 
 	{
 		//Make a backup of the board before the new play is added
-		Board backupBoard = board;
 		
 		//Adds the new word to the board
 		board=insertLetters(board,play);
@@ -213,7 +215,7 @@ public class Game implements Controller {
 		for (String word : wordsToCheck) {
 			System.out.println("Word: "+word);
 			if (!validWords.contains(word.toLowerCase())) {
-				board = backupBoard;
+				board.setBoard(backupBoard);
 				return "INVALID";
 				
 			}

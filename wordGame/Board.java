@@ -112,6 +112,10 @@ public class Board {
 	}
 	
 	public Cell[][] getBoard() {
+		Cell[][] copy = new Cell [width][];
+		for(int i=0;i<width;i++) {
+			copy[i] = board[i].clone();
+		}
 		return board;
 	}
 	
@@ -123,7 +127,10 @@ public class Board {
 		
 		return arr;
 	}
-
+	
+	public void setBoard(Cell[][] cells) {
+		board = cells;
+	}
 	
 	
 }
