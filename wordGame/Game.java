@@ -147,19 +147,20 @@ public class Game implements Controller {
 	@Override
 	public String calculateScore(Play play)
 	{
+		int letterScore=0;
 		int tempScore=0;
+		String current = play.cell();
 		
 		//123
 		for(int i=0;i<play.letterPositionsInRack().length();i++)
 		{
 			String c = rack.getLetterFromRack(play.letterPositionsInRack().charAt(i)-49);
-			
 		switch (c) {
 			case "Q":
 			case "X":
 			case "Y":
 			case "Z":{
-				tempScore += 3;
+				letterScore = 3;
 				break;
 			}
 				
@@ -169,15 +170,31 @@ public class Game implements Controller {
 			case "K":
 			case "M":
 			case "N":{
-				tempScore += 2;
+				letterScore = 2;
 				break;	
 			}
 			default:
-				tempScore += 1;
+				letterScore = 1;
 				break;
 		}
 		
+		//checks if cell is special and changes the score if it is
+		if(board.getCell(current).isSpecial) {
+			tempScore += letterScore*2;
+		} else {
+			tempScore += letterScore;
 		}
+		
+		if(play.dir() == Direction.DOWN) {
+			
+			current = board.getCellDown(current).getPosition();
+		}
+		else {	
+			current = board.getCellRight(current).getPosition();
+		}
+		
+		}
+		
 		return Integer.toString(tempScore);
 	}
 
@@ -394,5 +411,5 @@ public class Game implements Controller {
 		}
 		return fullWord.toString();
 	}
-
+	
 }
