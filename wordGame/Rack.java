@@ -1,48 +1,55 @@
 package wordGame;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Rack {
 
-	ArrayList<String> rack = new ArrayList<String>(10);
+	String rack[] ;
 	
 	String[] letters;
 	
 	public Rack() {
 		
-		rack = new ArrayList<String>(5);
+		rack = new String[5];
 		
 		letters = new String[] {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
-		rack.add("C");
-		rack.add("A");
-		rack.add("R");
+		
+		refillRack();
 	}
 	
 	public String refillRack() {
+		
 		Random rand = new Random();
-		while (rack.size() != 5) {
-			rack.add(letters[rand.nextInt(26)]);
+		for(int i =0;i<rack.length;i++)
+		{
+			
+				rack[i]=(letters[rand.nextInt(26)]);
+			
 		}
+		rack[0] = "J";
+		rack[1] = "O";
+		rack[2] = "G";
 		
 		return "Rack refilled! Rack is now: " + toString();
 	}
 	
 	public void removeFromRack(String letterPos) {
 		for(Character c : letterPos.toCharArray()) {
-			rack.remove(Character.getNumericValue(c) - 1);
+			rack[Character.getNumericValue(c)-1] = null;	
 		}
 	}
 	
 	public String getLetterFromRack(int pos) {
-		return rack.get(pos);
+		return rack[pos];
 	}
 	
 	public char getLetterFromRackAsChar(int pos) {
-		return rack.get(pos).charAt(0);
+		return rack[pos].charAt(0);
 	}
 	
-	public ArrayList<String> getRack() {
+	public String[] getRack() {
 		return rack;
 	}
 	
@@ -53,8 +60,10 @@ public class Rack {
 		rackString.append("[ ");
 		
 		for (String s : rack) {
+			if(s != null) {
 			rackString.append(s);
 			rackString.append(" ");
+			}
 		}
 		
 		rackString.append("]");

@@ -15,6 +15,7 @@ public class Game implements Controller {
 	private Board board;
 	private HashSet<String> validWords = new HashSet<String>(); 
 	private ArrayList<String> wordsInPlay;
+	private int score;
 	
 	public static void main(String[] args) {
 		Game game = new Game();
@@ -26,8 +27,9 @@ public class Game implements Controller {
 		rack = new Rack();
 		board = new Board();
 		wordsInPlay = new ArrayList<String>();
-		
+		score = 0;
 		loadDictionary("dictionary.txt");
+		
 	}
 	
 	public void loadDictionary(String path) {
@@ -132,18 +134,51 @@ public class Game implements Controller {
 		
 		String isValid  = checkValidity(play);
 		if (isValid.equals("VALID")) {
-			insertLetters(play);
-			rack.removeFromRack(play.letterPositionsInRack());
+			score += Integer.parseInt(calculateScore(play));
+			System.out.println("(+"+calculateScore(play)+")"+"Total Score: "+score);
 			
+			insertLetters(play);	
+			rack.removeFromRack(play.letterPositionsInRack());
 		}
 		
 		return "\nThe play was: " + isValid + "\n" + gameState();
 	}
 
 	@Override
-	public String calculateScore(Play play) {
-		// TODO Auto-generated method stub
-		return null;
+	public String calculateScore(Play play)
+	{
+		int tempScore=0;
+		
+		//123
+		for(int i=0;i<play.letterPositionsInRack().length();i++)
+		{
+			String c = rack.getLetterFromRack(play.letterPositionsInRack().charAt(i)-49);
+			
+		switch (c) {
+			case "Q":
+			case "X":
+			case "Y":
+			case "Z":{
+				tempScore += 3;
+				break;
+			}
+				
+			case "B":
+			case "G":
+			case "J":
+			case "K":
+			case "M":
+			case "N":{
+				tempScore += 2;
+				break;	
+			}
+			default:
+				tempScore += 1;
+				break;
+		}
+		
+		}
+		return Integer.toString(tempScore);
 	}
 
 	private Board insertLetters(Play p) {
@@ -213,9 +248,10 @@ public class Game implements Controller {
 				currentCellPosition = board.getCellDown(currentCellPosition).getPosition();
 			}
 		}
-		
+		System.out.println(wordsToCheck.toString());
 		for (String word : wordsToCheck) {
 			System.out.println("Word: "+word);
+			
 			if (!validWords.contains(word.toLowerCase())) {
 				deleteWord(startCellPosition, endCellPosition, dir);
 				return "INVALID";
