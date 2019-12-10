@@ -116,7 +116,7 @@ public class Board {
 		for(int i=0;i<width;i++) {
 			copy[i] = board[i].clone();
 		}
-		return board;
+		return copy;
 	}
 	
 	private int[] getPosXY(String position) {
@@ -128,8 +128,8 @@ public class Board {
 		return arr;
 	}
 	
-	public void setBoard(Cell[][] cells) {
-		board = cells;
+	public void setBoard(Cell[][] newBoard) {
+		board = newBoard;
 	}
 	
 	

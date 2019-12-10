@@ -28,15 +28,20 @@ public class Rack {
 		return "Rack refilled! Rack is now: " + toString();
 	}
 	
-	public void removeFromRack(int index) {
-		rack.remove(index);
+	public void removeFromRack(String letterPos) {
+		for(Character c : letterPos.toCharArray()) {
+			rack.remove(Character.getNumericValue(c) - 1);
+		}
 	}
+	
 	public String getLetterFromRack(int pos) {
 		return rack.get(pos);
 	}
+	
 	public char getLetterFromRackAsChar(int pos) {
 		return rack.get(pos).charAt(0);
 	}
+	
 	public ArrayList<String> getRack() {
 		return rack;
 	}

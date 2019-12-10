@@ -15,7 +15,6 @@ public class Game implements Controller {
 	private Board board;
 	private HashSet<String> validWords = new HashSet<String>(); 
 	private ArrayList<String> wordsInPlay;
-	private Cell[][] backupBoard;
 	
 	public static void main(String[] args) {
 		Game game = new Game();
@@ -26,7 +25,6 @@ public class Game implements Controller {
 	public Game() {
 		rack = new Rack();
 		board = new Board();
-		backupBoard = board.getBoard();
 		wordsInPlay = new ArrayList<String>();
 		
 		loadDictionary("dictionary.txt");
@@ -133,6 +131,11 @@ public class Game implements Controller {
 		}
 		
 		String isValid  = checkValidity(play);
+		if (isValid.equals("VALID")) {
+			insertLetters(play);
+			rack.removeFromRack(play.letterPositionsInRack());
+			
+		}
 		
 		return "\nThe play was: " + isValid + "\n" + gameState();
 	}
@@ -143,25 +146,24 @@ public class Game implements Controller {
 		return null;
 	}
 
-	private Board insertLetters(Board b,Play p) {
-		backupBoard = b.getBoard();
-		Cell newCell = b.getCell(p.cell());
+	private Board insertLetters(Play p) {
+		
+		Cell newCell = board.getCell(p.cell());
 		
 		for (char letter: p.letterPositionsInRack().toCharArray()) {
-			
-			
+		
 			newCell.setValue(rack.getLetterFromRackAsChar(Character.getNumericValue(letter-1)));
-			b.setCell(newCell);
-			System.out.println(newCell.getValue());
+			board.setCell(newCell);
+			
 			if(p.dir() == Direction.ACROSS)
 			{
-				newCell = b.getCellRight(newCell.getPosition());
+				newCell = board.getCellRight(newCell.getPosition());
 			} else
 			{
-				newCell = b.getCellDown(newCell.getPosition());
+				newCell = board.getCellDown(newCell.getPosition());
 			}	
 		}
-		return b;
+		return board;
 	}
 	@Override
 	public String checkValidity(Play play) 
@@ -169,7 +171,7 @@ public class Game implements Controller {
 		//Make a backup of the board before the new play is added
 		
 		//Adds the new word to the board
-		board=insertLetters(board,play);
+		board=insertLetters(play);
 		
 		//The start cell of the play
 		String startCellPosition = play.cell();
@@ -215,13 +217,32 @@ public class Game implements Controller {
 		for (String word : wordsToCheck) {
 			System.out.println("Word: "+word);
 			if (!validWords.contains(word.toLowerCase())) {
-				board.setBoard(backupBoard);
+				deleteWord(startCellPosition, endCellPosition, dir);
 				return "INVALID";
 				
 			}
 		}
+		deleteWord(startCellPosition, endCellPosition, dir);
 		return "VALID";
 	}
+	
+	private void deleteWord(String currentPos, String endCellPos, Direction dir) {
+		
+		if(dir == Direction.ACROSS) {
+			String cellAfterEnd = board.getCellRight(endCellPos).getPosition();
+		while (!currentPos.equals(cellAfterEnd)) {
+				board.getCell(currentPos).setValue(null);
+				currentPos = board.getCellRight(currentPos).getPosition();
+			}
+		} else {
+			String cellAfterEnd = board.getCellDown(endCellPos).getPosition();	
+			while (!currentPos.equals(cellAfterEnd)) {
+				board.getCell(currentPos).setValue(null);
+				currentPos = board.getCellDown(currentPos).getPosition();
+			}
+		}
+	}
+	
 	
 	/*
 	 * Add the initial letter, to the word
@@ -296,7 +317,7 @@ public class Game implements Controller {
 				currentPos = board.getCellRight(currentPos).getPosition();
 			}
 			//Add letters which are to the left of the new letters
-			Cell leftCell = board.getCellLeft(currentPos);
+			Cell leftCell = board.getCellLeft(startCellPos);
 			while(leftCell.isEmpty() == false) {
 				fullWord.insert(0, leftCell.getValue());
 				leftCell = board.getCellLeft(leftCell.getPosition());
