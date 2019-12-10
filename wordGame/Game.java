@@ -248,9 +248,9 @@ public class Game implements Controller {
 				currentCellPosition = board.getCellDown(currentCellPosition).getPosition();
 			}
 		}
-		System.out.println(wordsToCheck.toString());
+		
 		for (String word : wordsToCheck) {
-			System.out.println("Word: "+word);
+			
 			
 			if (!validWords.contains(word.toLowerCase())) {
 				deleteWord(startCellPosition, endCellPosition, dir);
