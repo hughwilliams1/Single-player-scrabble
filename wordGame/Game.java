@@ -14,7 +14,8 @@ public class Game implements Controller {
 	private Rack rack;
 	private Board board;
 	private Dictionary dictionary;
-	private int score;
+	private int totalScore;
+	private boolean isFirstWord;
 	
 	public static void main(String[] args) {
 		Game game = new Game();
@@ -25,7 +26,8 @@ public class Game implements Controller {
 	public Game() {
 		rack = new Rack();
 		board = new Board();
-		score = 0;
+		totalScore = 0;
+		isFirstWord = true;
 		dictionary = new Dictionary("dictionary.txt");
 	}
 	
@@ -115,13 +117,16 @@ public class Game implements Controller {
 		
 		String isValid  = checkValidity(play);
 		if (isValid.equals("VALID")) {
-			score += (calculateScore(play).charAt(14) - 49);
+			int playScore = calculateScore(play).charAt(14) - 48;
+			totalScore += playScore;
 			
 			insertLetters(play);	
 			rack.removeFromRack(play.letterPositionsInRack());
+			isFirstWord = false;
+			return "\nThe play was: " + isValid + ", Score:" + playScore+ ", Total Score:" + totalScore + "\n\n" + gameState();
 		}
 		
-		return "\nThe play was: " + isValid + ", The Score was: " + score + "\n\n" + gameState();
+		return "\nThe play was: " + isValid + ", Total Score: (+0) " + totalScore + "\n\n" + gameState();
 	}
 
 	@Override
@@ -196,8 +201,9 @@ public class Game implements Controller {
 	@Override
 	public String checkValidity(Play play) 
 	{
-		//Make a backup of the board before the new play is added
-		
+		if(rack.checkRackIsEmpty(play.letterPositionsInRack())) {
+			return "INVALID";
+		}
 		//Adds the new word to the board
 		board=insertLetters(play);
 		
@@ -218,6 +224,8 @@ public class Game implements Controller {
 		
 		//An arraylist containing all of the words which need to be checked in order for this play to be valid. Ensures that placing a new letter doesnt break existing words.
 		ArrayList<String> wordsToCheck = new ArrayList<String>();
+		
+		
 		
 		if(play.letterPositionsInRack().length() > 1) {
 			//Builds the new word from letters in rack and letters on the board.
@@ -241,11 +249,22 @@ public class Game implements Controller {
 				currentCellPosition = board.getCellDown(currentCellPosition).getPosition();
 			}
 		}
+		//Ensures new word is attached to existing words on board.	
+		if(!isFirstWord){
+			int wordsize =wordsToCheck.size(); 
+			if(wordsize > 1)
+			{
+				deleteWord(startCellPosition, endCellPosition, dir);
+				return "INVALID (Word not connecting to existing words)";
+			}
+		}
 		
-		for (String word : wordsToCheck) {
+		for (String word : wordsToCheck){
+
+			//Checks all words that have been created by the play and ensures that 
 			if (!dictionary.checkValidWord(word.toLowerCase())) {
 				deleteWord(startCellPosition, endCellPosition, dir);
-				return "INVALID";
+				return "INVALID(Word not in dictionary)";
 			}
 		}
 		deleteWord(startCellPosition, endCellPosition, dir);

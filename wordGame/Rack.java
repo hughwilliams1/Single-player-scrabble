@@ -37,6 +37,16 @@ public class Rack {
 			rack[Character.getNumericValue(c)-1] = null;	
 		}
 	}
+	public boolean checkRackIsEmpty(String letterPos)
+	{
+		for(Character c : letterPos.toCharArray()) {
+			if(rack[Character.getNumericValue(c)-1]==null) {
+				return true;
+			}	
+		}
+		
+		return false;
+	}
 	
 	public String getLetterFromRack(int pos) {
 		try {
