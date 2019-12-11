@@ -22,7 +22,9 @@ public class Game implements Controller {
 		TUI tui = new TUI(game);
 	}
 	
-	
+	/*
+	 * sets the variables and loads the dictionary
+	 */
 	public Game() {
 		rack = new Rack();
 		board = new Board();
@@ -43,6 +45,7 @@ public class Game implements Controller {
 		
 		stateString.append("   A B C D E F G H I J \n");
 		
+		//loops over the rows 
 		for (int r = 0; r < 10; r++) {
 			
 			if(r != 9) {
@@ -51,25 +54,29 @@ public class Game implements Controller {
 				stateString.append(r + 1);
 			}
 			
+			//loops over the columns
 			for (int c = 0; c < 10; c++) {
 				
 				stateString.append("|");
 				
 				Cell cell = board.getCell(c,r);
 				
+				//checks whether the cell is null, if not finds the value in that space
 				if (cell.getValue() != null) {
 					stateString.append(cell.getValue());
 				}
 				
+				//when the cell is null and also special display the special sign
 				if(cell.getSpecial() && cell.getValue()==null)
 				{
 					stateString.append("+");
 				}
+				//if null display nothing in the space
 				else if(cell.getValue()==null){
 					stateString.append(" ");
 				}
 			}
-			
+			//appends to the string builder
 			stateString.append("|");
 			stateString.append(r + 1);
 			stateString.append("\n");
