@@ -6,9 +6,9 @@ import java.util.Random;
 
 public class Rack {
 
-	String rack[] ;
+	private String rack[] ;
 	
-	String[] letters;
+	private String[] letters;
 	
 	public Rack() {
 		

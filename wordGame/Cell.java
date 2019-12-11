@@ -2,7 +2,7 @@ package wordGame;
 
 public class Cell {
 	
-	boolean isSpecial = false;
+	private boolean isSpecial = false;
 	//Since the grid uses letters for the x this may need to change from an int.
 	//A = 0, B = 1 etc.
 	private String position;

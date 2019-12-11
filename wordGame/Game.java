@@ -136,8 +136,10 @@ public class Game implements Controller {
 		int tempScore=0;
 		String current = play.cell();
 		
+		//loops over the amount of letters the player has selected
 		for(int i=0;i<play.letterPositionsInRack().length();i++)
 		{
+			//checks what letter the user is placing down and will assign it the corresponding points
 			String c = rack.getLetterFromRack(play.letterPositionsInRack().charAt(i)-49);
 			switch (c) {
 				case "Q":
@@ -163,12 +165,12 @@ public class Game implements Controller {
 			}
 			
 			//checks if cell is special and changes the score if it is
-			if(board.getCell(current).isSpecial) {
+			if(board.getCell(current).getSpecial()) {
 				tempScore += letterScore*2;
 			} else {
 				tempScore += letterScore;
 			}
-			
+			//Gets the user direction to enable checking for more special cells
 			if(play.dir() == Direction.DOWN) {
 				current = board.getCellDown(current).getPosition();
 			}
@@ -178,16 +180,19 @@ public class Game implements Controller {
 		}
 		return "The Score is: "  + Integer.toString(tempScore);
 	}
-
+	
+	//puts the users letters on the board
 	private Board insertLetters(Play p) {
 		
 		Cell newCell = board.getCell(p.cell());
 		
+		//loops over the players amount of selected letters 
 		for (char letter: p.letterPositionsInRack().toCharArray()) {
 		
 			newCell.setValue(rack.getLetterFromRackAsChar(Character.getNumericValue(letter-1)));
 			board.setCell(newCell);
 			
+			//checks if the direction is going Across and Down
 			if(p.dir() == Direction.ACROSS)
 			{
 				newCell = board.getCellRight(newCell.getPosition());
@@ -271,8 +276,10 @@ public class Game implements Controller {
 		return "VALID";
 	}
 	
+	//Deletes a word on the board. Normally called when a word is Invalid
 	private void deleteWord(String currentPos, String endCellPos, Direction dir) {
 		
+		//loops over the word in the direction the user picked to remove each letter
 		if(dir == Direction.ACROSS) {
 			String cellAfterEnd = board.getCellRight(endCellPos).getPosition();
 		while (!currentPos.equals(cellAfterEnd)) {
