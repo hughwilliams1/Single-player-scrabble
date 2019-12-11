@@ -13,8 +13,7 @@ public class Game implements Controller {
 
 	private Rack rack;
 	private Board board;
-	private HashSet<String> validWords = new HashSet<String>(); 
-	private ArrayList<String> wordsInPlay;
+	private Dictionary dictionary;
 	private int score;
 	
 	public static void main(String[] args) {
@@ -26,28 +25,10 @@ public class Game implements Controller {
 	public Game() {
 		rack = new Rack();
 		board = new Board();
-		wordsInPlay = new ArrayList<String>();
 		score = 0;
-		loadDictionary("dictionary.txt");
-		
+		dictionary = new Dictionary("dictionary.txt");
 	}
 	
-	public void loadDictionary(String path) {
-		//Load dictionary text file into hash set
-		try {
-		File file = new File(path);
-		FileReader fr = new FileReader(file);
-		BufferedReader br = new BufferedReader(fr);
-		String line;
-		while((line = br.readLine()) != null)
-		{
-		    validWords.add(line);
-		}
-		}  catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-	}
 	@Override
 	public String refillRack() {
 		return rack.refillRack();
@@ -134,14 +115,13 @@ public class Game implements Controller {
 		
 		String isValid  = checkValidity(play);
 		if (isValid.equals("VALID")) {
-			score += Integer.parseInt(calculateScore(play));
-			System.out.println("(+"+calculateScore(play)+")"+"Total Score: "+score);
+			score += (calculateScore(play).charAt(14) - 49);
 			
 			insertLetters(play);	
 			rack.removeFromRack(play.letterPositionsInRack());
 		}
 		
-		return "\nThe play was: " + isValid + "\n" + gameState();
+		return "\nThe play was: " + isValid + ", The Score was: " + score + "\n\n" + gameState();
 	}
 
 	@Override
@@ -151,51 +131,47 @@ public class Game implements Controller {
 		int tempScore=0;
 		String current = play.cell();
 		
-		//123
 		for(int i=0;i<play.letterPositionsInRack().length();i++)
 		{
 			String c = rack.getLetterFromRack(play.letterPositionsInRack().charAt(i)-49);
-		switch (c) {
-			case "Q":
-			case "X":
-			case "Y":
-			case "Z":{
-				letterScore = 3;
-				break;
+			switch (c) {
+				case "Q":
+				case "X":
+				case "Y":
+				case "Z":{
+					letterScore = 3;
+					break;
+				}
+					
+				case "B":
+				case "G":
+				case "J":
+				case "K":
+				case "M":
+				case "N":{
+					letterScore = 2;
+					break;	
+				}
+				default:
+					letterScore = 1;
+					break;
 			}
-				
-			case "B":
-			case "G":
-			case "J":
-			case "K":
-			case "M":
-			case "N":{
-				letterScore = 2;
-				break;	
-			}
-			default:
-				letterScore = 1;
-				break;
-		}
-		
-		//checks if cell is special and changes the score if it is
-		if(board.getCell(current).isSpecial) {
-			tempScore += letterScore*2;
-		} else {
-			tempScore += letterScore;
-		}
-		
-		if(play.dir() == Direction.DOWN) {
 			
-			current = board.getCellDown(current).getPosition();
+			//checks if cell is special and changes the score if it is
+			if(board.getCell(current).isSpecial) {
+				tempScore += letterScore*2;
+			} else {
+				tempScore += letterScore;
+			}
+			
+			if(play.dir() == Direction.DOWN) {
+				current = board.getCellDown(current).getPosition();
+			}
+			else {	
+				current = board.getCellRight(current).getPosition();
+			}
 		}
-		else {	
-			current = board.getCellRight(current).getPosition();
-		}
-		
-		}
-		
-		return Integer.toString(tempScore);
+		return "The Score is: "  + Integer.toString(tempScore);
 	}
 
 	private Board insertLetters(Play p) {
@@ -267,12 +243,9 @@ public class Game implements Controller {
 		}
 		
 		for (String word : wordsToCheck) {
-			
-			
-			if (!validWords.contains(word.toLowerCase())) {
+			if (!dictionary.checkValidWord(word.toLowerCase())) {
 				deleteWord(startCellPosition, endCellPosition, dir);
 				return "INVALID";
-				
 			}
 		}
 		deleteWord(startCellPosition, endCellPosition, dir);

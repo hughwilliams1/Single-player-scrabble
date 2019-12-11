@@ -24,13 +24,10 @@ public class Rack {
 		Random rand = new Random();
 		for(int i =0;i<rack.length;i++)
 		{
-			
+			if (rack[i] ==  null) {
 				rack[i]=(letters[rand.nextInt(26)]);
-			
+			}
 		}
-		rack[0] = "J";
-		rack[1] = "O";
-		rack[2] = "G";
 		
 		return "Rack refilled! Rack is now: " + toString();
 	}
@@ -42,7 +39,11 @@ public class Rack {
 	}
 	
 	public String getLetterFromRack(int pos) {
-		return rack[pos];
+		try {
+			return rack[pos];
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 	
 	public char getLetterFromRackAsChar(int pos) {
@@ -63,12 +64,13 @@ public class Rack {
 			if(s != null) {
 			rackString.append(s);
 			rackString.append(" ");
+			} else {
+				rackString.append("- ");
 			}
 		}
 		
 		rackString.append("]");
 		
 		return rackString.toString();
-	}
-	
+	}	
 }
