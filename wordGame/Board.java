@@ -122,9 +122,15 @@ public class Board {
 		return copy;
 	}
 	//Takes a position (A1 for example) and converts it to xy coordinates.
-	private int[] getPosXY(String position) {
+	public int[] getPosXY(String position) {
 		int x = position.charAt(0) - 65;
-		int y = position.charAt(1) - 49;
+		int y;
+		if (position.length() == 2) {
+			y = position.charAt(1) - 49;
+		} else {
+			y = 10;
+		}
+		
 		
 		int[] arr = {x,y};
 		

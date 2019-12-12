@@ -97,30 +97,6 @@ public class Game implements Controller {
 		/*
 		 * Before checking if word is valid make sure that word can be placed
 		 */
-		Cell currentCell = board.getCell(play.cell());
-		StringBuilder returnString = new StringBuilder();
-		
-		//Check if selected cells are all empty
-		for(int i = 0; i < play.letterPositionsInRack().length(); i++) {
-			// Check cell is out of range
-			if(currentCell == null) {
-				return "Cell is out of board range.";
-			}
-					
-			//If cell isn't empty then this play isn't valid.
-			if(!currentCell.isEmpty()) {
-				returnString.append("Cell ");
-				returnString.append(currentCell.getPosition());
-				returnString.append(" is full.");
-				return returnString.toString();
-			}
-					
-			if(play.dir() == Direction.ACROSS) {
-				currentCell = board.getCellRight(currentCell.getPosition());
-			} else {
-				currentCell = board.getCellDown(currentCell.getPosition());
-			}
-		}
 		
 		String isValid  = checkValidity(play);
 		if (isValid.equals("VALID")) {
@@ -213,26 +189,53 @@ public class Game implements Controller {
 	@Override
 	public String checkValidity(Play play) 
 	{
-		if(rack.checkRackIsEmpty(play.letterPositionsInRack())) {
-			return "INVALID";
-		}
-		//Adds the new word to the board
-		board=insertLetters(play);
 		
 		//The start cell of the play
 		String startCellPosition = play.cell();
-		
+				
 		//The length of the play
 		int playLength = play.letterPositionsInRack().length();
-		
+				
 		//The direction of the play
 		Direction dir = play.dir();
-		
-		//Find the end cell using starting cell, direction and the length of the play
-		String endCellPosition = board.getEndCell(startCellPosition, playLength, dir).getPosition();
-		
+				
 		//The current cell being looped over
 		String currentCellPosition = play.cell();
+		
+		Cell currentCell = board.getCell(play.cell());
+		StringBuilder returnString = new StringBuilder();
+		
+		//Find the end cell using starting cell, direction and the length of the play
+		String endCellPosition;
+		try {
+			endCellPosition = board.getEndCell(startCellPosition, playLength, dir).getPosition();
+		} catch(ArrayIndexOutOfBoundsException e) {
+			return "Cell is out of board range.";
+		}
+		
+		//Check if selected cells are all empty
+		for(int i = 0; i < play.letterPositionsInRack().length(); i++) {
+					
+			//If cell isn't empty then this play isn't valid.
+			if(!currentCell.isEmpty()) {
+				returnString.append("Cell ");
+				returnString.append(currentCell.getPosition());
+				returnString.append(" is full.");
+				return returnString.toString();
+			}
+					
+			if(play.dir() == Direction.ACROSS) {
+				currentCell = board.getCellRight(currentCell.getPosition());
+			} else {
+				currentCell = board.getCellDown(currentCell.getPosition());
+			}
+		}
+
+		if(rack.checkRackIsEmpty(play.letterPositionsInRack())) {
+			return "INVALID - Letters don't exist in rack";
+		}
+		//Adds the new word to the board
+		board=insertLetters(play);
 		
 		//An arraylist containing all of the words which need to be checked in order for this play to be valid. Ensures that placing a new letter doesnt break existing words.
 		ArrayList<String> wordsToCheck = new ArrayList<String>();
