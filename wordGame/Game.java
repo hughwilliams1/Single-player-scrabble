@@ -266,7 +266,6 @@ public class Game implements Controller {
 			int wordsize =wordsToCheck.size(); 
 			if(wordsize == play.letterPositionsInRack().length() + 1)
 			{
-				System.out.println("Word Size: " + wordsize + ", Play length: " + play.letterPositionsInRack().length() + 1);
 				deleteWord(startCellPosition, endCellPosition, dir);
 				return "INVALID (Word not connecting to existing words)";
 			}
