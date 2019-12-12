@@ -264,8 +264,9 @@ public class Game implements Controller {
 		//Ensures new word is attached to existing words on board.	
 		if(!isFirstWord){
 			int wordsize =wordsToCheck.size(); 
-			if(wordsize > 1)
+			if(wordsize == play.letterPositionsInRack().length() + 1)
 			{
+				System.out.println("Word Size: " + wordsize + ", Play length: " + play.letterPositionsInRack().length() + 1);
 				deleteWord(startCellPosition, endCellPosition, dir);
 				return "INVALID (Word not connecting to existing words)";
 			}

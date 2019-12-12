@@ -14,7 +14,7 @@ public class Rack {
 		
 		rack = new String[5];
 		
-		letters = new String[] {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+		letters = new String[] {"A", "A", "B","C","D","E", "E", "F","G","H","I", "I", "J","K","L","M","N","O", "O", "P","Q","R","S","T","U", "U", "V","W","X","Y","Z"};
 		
 		refillRack();
 	}
@@ -25,7 +25,7 @@ public class Rack {
 		for(int i =0;i<rack.length;i++)
 		{
 			if (rack[i] ==  null) {
-				rack[i]=(letters[rand.nextInt(26)]);
+				rack[i]=(letters[rand.nextInt(letters.length-1)]);
 			}
 		}
 		
